@@ -1,0 +1,112 @@
+#container{
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(8, minmax(100px, auto));
+    /* background-color: beige; */
+    grid-gap: 20px;
+    /* border: 1px black solid; */
+}
+
+header{
+    grid-column: 1 / 13;
+    grid-row: 1 / 2;
+    /* justify-self: center;
+    align-self: center; */
+    background-color: beige;
+    border: 1px black solid;
+
+}
+
+#headline{
+    color: blue;
+    text-align: center;
+
+}
+
+aside{
+    display: flex;
+    flex-direction: column;
+    grid-column: 1 / 5;
+    grid-row: 2 / 5;
+    align-items: center;
+    justify-content: center;
+    border: 1px black solid;
+    background-color: beige;
+
+    /* align-items: center; */
+
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+
+#formHeadline{
+    text-align: center;
+    margin: 10px;
+}
+
+#recipeName{
+    text-align: center;
+    margin-bottom: 10px;
+    /* width: auto; */
+    min-width: 200px;
+    /* border-radius: 10%; */
+    /* border: 2px black solid; */
+    color: black;
+}
+
+#listIngredients{
+    align-items: center;
+    text-align: center;
+    margin-bottom: 10px;
+    min-width: 200px;
+    
+}
+
+#steps{
+    margin-bottom: 10px;
+    text-align: center;
+    min-width: 200px;
+}
+
+button{
+    margin: 10px;
+    width: auto;
+}
+
+main{
+    grid-column: 5 / 13;
+    grid-row: 2 / 9;
+    border: 1px black solid;
+    background-color: beige;
+
+
+}
+
+#mainHeadline{
+    text-align: center;
+}
+
+
+#recipes {
+    /* display: flex;
+    flex-direction: column;
+    align-items: center; */
+    min-height: 100px;
+    padding: 10px;
+    border: 1px solid #ccc;  /* Gives a border to see where it is */
+}
+
+.recipe-card {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #333;
+    background-color: #f9f9f9;
+    text-wrap: wrap;
+    display: flex;
+    flex-direction: column;
+}
