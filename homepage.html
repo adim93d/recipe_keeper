@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe Keeper</title>
     <link rel="stylesheet" href="styles.css">
-    <title>Document</title>
 </head>
 
 <body>
@@ -18,24 +17,30 @@
         <aside>
             <h2 id="formHeadline">Add Recipe</h2>
             <form id="recipeForm">
-                <label for="recipeName">Recipe name</label>
-                <input type="text" name="recipeName" id="recipeName" placeholder="Enter Recipe Name"><br>
-                <label for="listIngredients">Recipe ingredients</label>
-                <textarea id="listIngredients" placeholder="Enter ingredients seperated by comma"></textarea><br>
-                <label for="steps">Recipe steps</label>
-                <textarea id="steps" placeholder="Steps for preparation"></textarea><br>
-                <label for="recipeImage">Recipe Image URL:</label>
-                <input type="url" id="recipeImage" name="recipeImage" placeholder="http://example.com/my-dish.jpg">
+                <label for="recipeName">Recipe Name</label>
+                <input type="text" name="recipeName" id="recipeName" placeholder="Enter Recipe Name" required>
+                
+                <label for="listIngredients">Ingredients</label>
+                <textarea id="listIngredients" placeholder="Enter ingredients separated by comma" required></textarea>
+                
+                <label for="steps">Steps</label>
+                <textarea id="steps" placeholder="Steps for preparation" required></textarea>
+                
+                <label for="recipeImage">Recipe Image URL</label>
+                <input type="url" id="recipeImage" name="recipeImage" placeholder="http://example.com/my-dish.jpg" required>
+
                 <button id="recipeSubmitButton" type="submit">Add Recipe</button>
             </form>
         </aside>
 
         <main>
-            <h2 id="mainHeadline"><u>Your Recipes</u></h2>
+            <h2 id="mainHeadline">Your Recipes</h2>
             <div id="recipes">
+                <!-- Recipe cards will be displayed here -->
             </div>
         </main>
     </div>
+
     <script src='function.js'></script>
 </body>
 
