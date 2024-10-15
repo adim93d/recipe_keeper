@@ -4,53 +4,41 @@ let ingredientsForm = document.getElementById('listIngredients');
 let stepsForm = document.getElementById('steps');
 let imgForm = document.getElementById('recipeImage');
 let displayArea = document.getElementById('recipes');
-let recipes = [];
 
-// Load recipes from local storage when the page loads
-window.addEventListener('DOMContentLoaded', function() {
-    if (localStorage.getItem('recipes')) {
-        recipes = JSON.parse(localStorage.getItem('recipes'));
-        // Display the loaded recipes on the page
-        recipes.forEach(recipe => displayRecipe(recipe));
+async function fetchUserData(resource) {
+    try {
+        const response = await fetch(resource);
+        const data = await response.json();        
+        return data 
+    } catch (error) {
+        console.log('Error fetching data', error);
     }
-});
-
-// Save recipes to local storage
-function saveToLocalStorage() {
-    localStorage.setItem('recipes', JSON.stringify(recipes));
+    
 }
 
-// Handle form submission
-recipeForm.addEventListener('submit', function(event) {
-    event.preventDefault();
-    console.log('form submitted');
+function formRecipeData(form){
+    form.addEventListener('submit', function(event){
+        event.preventDefault();
+        console.log('form submitted');
 
-    // Collect input values
-    let enteredRecipeName = recipeNameForm.value;
-    let enteredIngredients = ingredientsForm.value;
-    let enteredSteps = stepsForm.value;
-    let enteredImgUrl = imgForm.value;
+        let enteredRecipeName = recipeNameForm.value;
+        let enteredIngredients = ingredientsForm.value;
+        let enteredSteps = stepsForm.value;
+        let enteredImgUrl = imgForm.value;
 
-    // Create a new recipe object
-    let newRecipe = {
-        name: enteredRecipeName,
-        ingredients: enteredIngredients,
-        steps: enteredSteps,
-        image: enteredImgUrl
-    };
+        let newRecipe = {
+            name: enteredRecipeName,
+            ingredients: enteredIngredients,
+            steps: enteredSteps,
+            image: enteredImgUrl
+        };
+        form.reset();
+        return newRecipe;
 
-    // Add the new recipe to the array
-    recipes.push(newRecipe);
+    });
+}
 
-    // Save updated recipes array to local storage
-    saveToLocalStorage();
-
-    // Display the new recipe
-    displayRecipe(newRecipe);
-
-    // Reset the form after adding the recipe
-    recipeForm.reset();
-});
+fetchUserData('recipes.json');
 
 // Display a recipe on the page
 function displayRecipe(recipe) {
@@ -80,8 +68,8 @@ function displayRecipe(recipe) {
     deleteButton.textContent = "Delete Recipe";
     deleteButton.classList.add('delete-btn');
     deleteButton.addEventListener('click', function() {
-        deleteRecipe(recipe);
-        recipeDiv.remove();  // Remove the recipe from the page
+        // deleteRecipe(recipe);
+        // recipeDiv.remove();  // Remove the recipe from the page
     });
 
     // Append the created elements to the recipeDiv
@@ -95,11 +83,80 @@ function displayRecipe(recipe) {
     displayArea.appendChild(recipeDiv);
 }
 
+// // Load recipes from local storage when the page loads
+// window.addEventListener('DOMContentLoaded', function() {
+//     if (localStorage.getItem('recipes')) {
+//         recipes = JSON.parse(localStorage.getItem('recipes'));
+//         // Display the loaded recipes on the page
+//         recipes.forEach(recipe => displayRecipe(recipe));
+//     }
+// });
+
+// // Save recipes to local storage
+// function saveToLocalStorage() {
+//     localStorage.setItem('recipes', JSON.stringify(recipes));
+// }
+
+// // Handle form submission
+// recipeForm.addEventListener('submit', function(event) {
+//     event.preventDefault();
+//     console.log('form submitted');
+
+//     // Collect input values
+//     let enteredRecipeName = recipeNameForm.value;
+//     let enteredIngredients = ingredientsForm.value;
+//     let enteredSteps = stepsForm.value;
+//     let enteredImgUrl = imgForm.value;
+
+//     // Create a new recipe object
+//     let newRecipe = {
+//         name: enteredRecipeName,
+//         ingredients: enteredIngredients,
+//         steps: enteredSteps,
+//         image: enteredImgUrl
+//     };
+
+//     // Add the new recipe to the array
+//     recipes.push(newRecipe);
+
+//     // // Save updated recipes array to local storage
+//     // saveToLocalStorage();
+
+//     // Display the new recipe
+//     displayRecipe(newRecipe);
+
+//     // Reset the form after adding the recipe
+//     recipeForm.reset();
+// });
+
+
+
 // Delete a recipe
 function deleteRecipe(recipeToDelete) {
     // Find the index of the recipe to be deleted
     recipes = recipes.filter(recipe => recipe.name !== recipeToDelete.name);
 
     // Save the updated recipes array to local storage
-    saveToLocalStorage();
+    // saveToLocalStorage();
 }
+
+
+function readJson(){}
+
+function writeJson(){}
+
+function createJson(){}
+
+function createHtmlElements(){}
+
+function readRecipe(){}
+
+function formRecipe(){}
+
+function addRecipe(){}
+
+function updateRecipe(){}
+
+function deleteRecipe(){}
+
+window.onload = () => {}
