@@ -112,7 +112,6 @@ def read_recipe(recipe_id: int):
         raise HTTPException(status_code=404, detail="Recipe not found")
     return recipe
 
-
 @app.put("/recipes/{recipe_id}")
 def update_recipe(recipe_id: int, updated_recipe: Recipe):
     """Update a recipe by its ID.
@@ -134,24 +133,14 @@ def update_recipe(recipe_id: int, updated_recipe: Recipe):
         raise HTTPException(status_code=404, detail="Recipe not found")
 
     updated_recipe.id = recipe_id
-    recipes[recipe_index] = updated_recipe.model_dump()
+    recipes[recipe_index] = updated_recipe.dict()  # Use dict() here
     save_recipes(recipes)
     return updated_recipe
 
 
 @app.delete("/recipes/{recipe_id}")
 def delete_recipe(recipe_id: int):
-    """Delete a recipe by its ID.
-
-    Args:
-        recipe_id (int): ID of the recipe to delete.
-
-    Raises:
-        HTTPException: If the recipe with the specified ID is not found.
-
-    Returns:
-        dict: A status message indicating successful deletion.
-    """
+    """Delete a recipe by its ID."""
     recipes = load_recipes()
     recipe_index = next((index for index, r in enumerate(recipes) if r["id"] == recipe_id), None)
 

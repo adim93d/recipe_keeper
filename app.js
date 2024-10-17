@@ -4,20 +4,22 @@ let ingredientsForm = document.getElementById('listIngredients');
 let stepsForm = document.getElementById('steps');
 let imgForm = document.getElementById('recipeImage');
 let displayArea = document.getElementById('recipes');
+let recipeSubmitButton = document.getElementById('recipeSubmitButton');
+let editMode = false;
+let currentRecipeId = null;
 
 async function fetchRecipeData() {
     try {
-        // Update to fetch from the FastAPI endpoint
         const response = await fetch('http://localhost:8000/recipes');
         const data = await response.json();
-        createHtmlElements(data);       
+        createHtmlElements(data);
         return data;
     } catch (error) {
         console.log('Error fetching data', error);
     }
 }
 
-// Handle form submission and POST data
+// Handle form submission for both adding and editing recipes
 recipeForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     console.log('form submitted');
@@ -29,25 +31,29 @@ recipeForm.addEventListener('submit', async (event) => {
 
     let newRecipe = {
         name: enteredRecipeName,
-        ingredients: enteredIngredients,  // Convert to list
+        ingredients: enteredIngredients,
         steps: enteredSteps,
         img: enteredImgUrl
     };
-    console.log('new recipe:', newRecipe);
+
+    if (editMode) {
+        // Edit existing recipe
+        await fetchUpdateRecipe(currentRecipeId, newRecipe);
+        recipeSubmitButton.textContent = 'Add Recipe';  // Reset button label
+        editMode = false;  // Reset edit mode
+    } else {
+        // Add new recipe
+        await fetchPostNewRecipe(newRecipe);
+    }
 
     // Reset the form
     recipeForm.reset();
-
-    // Send POST request with the new recipe data
-    await fetchPostNewRecipe(newRecipe);
-
-    // Re-fetch the updated recipe data from the API
     await fetchRecipeData();
 });
 
 function createHtmlElements(recipesData) {
     let recipeContainer = displayArea;
-    recipeContainer.innerHTML = '';  // Clear the previous content before adding new ones
+    recipeContainer.innerHTML = '';
 
     recipesData.forEach(recipe => {
         let recipeDiv = document.createElement('div');
@@ -63,31 +69,88 @@ function createHtmlElements(recipesData) {
         stepsElement.textContent = "Steps: " + recipe.steps;
 
         let imageElement = document.createElement('img');
-        imageElement.src = recipe.img;  // Set the src to the image URL
+        imageElement.src = recipe.img;
         imageElement.alt = "Image of " + recipe.name;
-        imageElement.width = 200;  // Optional: Set width
+        imageElement.width = 200;
+
+        // Edit Button
+        let editButton = document.createElement('button');
+        editButton.textContent = 'Edit';
+        editButton.addEventListener('click', () => {
+            loadRecipeForEditing(recipe);
+            smoothScrollToForm();
+        });
+
+        // Delete Button
+        let deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', async () => {
+            await fetchDeleteRecipe(recipe.id);
+            await fetchRecipeData();
+        });
 
         recipeDiv.appendChild(recipeNameElement);
         recipeDiv.appendChild(ingredientsElement);
         recipeDiv.appendChild(stepsElement);
         recipeDiv.appendChild(imageElement);
+        recipeDiv.appendChild(editButton);
+        recipeDiv.appendChild(deleteButton);
 
-        displayArea.appendChild(recipeDiv);
+        recipeContainer.appendChild(recipeDiv);
     });
 }
 
+function loadRecipeForEditing(recipe) {
+    recipeNameForm.value = recipe.name;
+    ingredientsForm.value = recipe.ingredients.join(", ");
+    stepsForm.value = recipe.steps;
+    imgForm.value = recipe.img;
+    currentRecipeId = recipe.id;
+    recipeSubmitButton.textContent = 'Edit Recipe';
+    editMode = true;
+}
+
+// Function to scroll smoothly to the form
+function smoothScrollToForm() {
+    document.querySelector('aside').scrollIntoView({ behavior: 'smooth' });
+}
+
+// API for adding a new recipe
 async function fetchPostNewRecipe(newRecipeData) {
     try {
-        const response = await fetch('http://localhost:8000/recipes', {
+        await fetch('http://localhost:8000/recipes', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(newRecipeData)
         });
+    } catch (error) {
+        console.error('Error: ', error);
+    }
+}
 
-        const result = await response.json();
-        console.log('Success: ', result);
+// API for updating an existing recipe
+async function fetchUpdateRecipe(recipeId, updatedRecipeData) {
+    try {
+        await fetch(`http://localhost:8000/recipes/${recipeId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedRecipeData)
+        });
+    } catch (error) {
+        console.error('Error: ', error);
+    }
+}
+
+// API for deleting a recipe
+async function fetchDeleteRecipe(recipeId) {
+    try {
+        await fetch(`http://localhost:8000/recipes/${recipeId}`, {
+            method: 'DELETE'
+        });
     } catch (error) {
         console.error('Error: ', error);
     }
@@ -97,7 +160,3 @@ async function fetchPostNewRecipe(newRecipeData) {
 window.onload = () => {
     fetchRecipeData();
 };
-
-// function updateRecipe(){}
-
-// function deleteRecipe(){}

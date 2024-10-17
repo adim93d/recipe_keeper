@@ -97,6 +97,9 @@ main {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .recipe-card:hover {
@@ -116,6 +119,11 @@ main {
 
 .recipe-card p {
     color: #7f8c8d;
+}
+
+.recipe-card button {
+    align-self: flex-start;
+    margin-top: 10px;
 }
 
 /* Media Queries for Mobile Responsiveness */
