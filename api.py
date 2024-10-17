@@ -18,7 +18,7 @@ app = FastAPI()
 # CORS settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5500"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -65,6 +65,8 @@ class Recipe(BaseModel):
     id: int = None
     name: str
     ingredients: list[str]
+    steps: str
+    img: str
 
 
 @app.get("/recipes")
@@ -86,10 +88,10 @@ def create_recipe(recipe: Recipe):
     recipes = load_recipes()
     recipe_id = max((recipe["id"] for recipe in recipes), default=0) + 1
     recipe.id = recipe_id
-    recipes.append(recipe.model_dump())
+    recipes.append(recipe.dict())  # Use dict() here
     save_recipes(recipes)
     return recipe
-
+    
 
 @app.get("/recipes/{recipe_id}")
 def read_recipe(recipe_id: int):

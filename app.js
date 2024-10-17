@@ -8,7 +8,7 @@ let displayArea = document.getElementById('recipes');
 async function fetchRecipeData() {
     try {
         // Update to fetch from the FastAPI endpoint
-        const response = await fetch('/recipes');
+        const response = await fetch('http://localhost:8000/recipes');
         const data = await response.json();
         createHtmlElements(data);       
         return data;
@@ -23,17 +23,17 @@ recipeForm.addEventListener('submit', async (event) => {
     console.log('form submitted');
 
     let enteredRecipeName = recipeNameForm.value;
-    let enteredIngredients = ingredientsForm.value;
+    let enteredIngredients = ingredientsForm.value.split(', ');
     let enteredSteps = stepsForm.value;
     let enteredImgUrl = imgForm.value;
 
     let newRecipe = {
         name: enteredRecipeName,
-        ingredients: enteredIngredients,
-        // .split(","),  // Convert to list
+        ingredients: enteredIngredients,  // Convert to list
         steps: enteredSteps,
-        image: enteredImgUrl
+        img: enteredImgUrl
     };
+    console.log('new recipe:', newRecipe);
 
     // Reset the form
     recipeForm.reset();
@@ -63,7 +63,7 @@ function createHtmlElements(recipesData) {
         stepsElement.textContent = "Steps: " + recipe.steps;
 
         let imageElement = document.createElement('img');
-        imageElement.src = recipe.image;  // Set the src to the image URL
+        imageElement.src = recipe.img;  // Set the src to the image URL
         imageElement.alt = "Image of " + recipe.name;
         imageElement.width = 200;  // Optional: Set width
 
@@ -78,7 +78,7 @@ function createHtmlElements(recipesData) {
 
 async function fetchPostNewRecipe(newRecipeData) {
     try {
-        const response = await fetch('/recipes', {
+        const response = await fetch('http://localhost:8000/recipes', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -97,10 +97,6 @@ async function fetchPostNewRecipe(newRecipeData) {
 window.onload = () => {
     fetchRecipeData();
 };
-
-// function createJson(){}
-
-// function readRecipe(){}
 
 // function updateRecipe(){}
 
